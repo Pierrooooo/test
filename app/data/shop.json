@@ -1,0 +1,9 @@
+{
+  "title": "Boutique",
+  "message": "En cours de construction",
+  "additionalInfo": "Notre boutique en ligne ouvrira prochainement. Vous y trouverez une sélection d'objets design édités en série limitée, des reproductions de nos installations les plus emblématiques, ainsi que des publications exclusives sur notre processus créatif.",
+  "newsletter": {
+    "text": "Souhaitez-vous être informé de l'ouverture ?",
+    "placeholder": "Votre email"
+  }
+}
