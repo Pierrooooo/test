@@ -85,7 +85,7 @@ export default function ProjectsPage() {
                   : "text-gray-500 dark:text-gray-400"
               } cursor-pointer hover:text-black dark:hover:text-white transition-colors`}
             >
-              Projets
+              <h1>Projets</h1>
             </button>
             {years.map((year) => (
               <button
@@ -139,7 +139,7 @@ export default function ProjectsPage() {
                 )}
               </div>
 
-              <h2 className=" text-sm font-medium dark:text-white">
+              <h2 className="mt-1 text-sm font-medium dark:text-white">
                 {project.title}
               </h2>
             </Link>

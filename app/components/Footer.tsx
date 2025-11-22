@@ -1,13 +1,19 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
+import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+
+// Enregistrer le plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollToPlugin);
+}
 
 const Footer = () => {
   const scrollToTop = () => {
     gsap.to(window, {
       duration: 1,
-      scrollTo: { y: 0 },
+      scrollTo: 0, // Simplifié - juste la position Y
       ease: "power2.inOut"
     });
   };

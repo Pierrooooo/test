@@ -154,7 +154,7 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
                     </a>
                   ))}
               </div>
-              <div className="fixed bottom-24 w-full max-w-4xl p-6 md:p-24 mx-auto flex justify-end">
+              <div className="fixed bottom-24 md:w-full max-w-4xl md:p-6 md:p-24 mx-auto flex justify-end">
                 <Link
                   href="/projects"
                   className="text-right text-gray-600 hover:text-black dark:hover:text-white hover:cursor-pointer transition-colors"
