@@ -19,7 +19,7 @@ export function PanelProvider({ children }: { children: React.ReactNode }) {
   const [currentContent, setCurrentContent] = useState<ContentType | null>(null);
   const panelRef = useRef<{ loadContent: (type: ContentType) => void }>(null);
 
-  const pathname = usePathname(); // 👈 Detect route changes
+  const pathname = usePathname();
 
   const openPanel = (type: ContentType) => {
     setCurrentContent(type);
@@ -37,7 +37,6 @@ export function PanelProvider({ children }: { children: React.ReactNode }) {
     setCurrentContent(null);
   };
 
-  // 👇 AUTO-CLOSE WHEN ROUTE CHANGES
   useEffect(() => {
     if (isOpen) {
       closePanel();

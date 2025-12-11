@@ -27,15 +27,31 @@ const Footer = () => {
         >
           Email
         </a>
-        <a 
-          href="https://instagram.com" 
+        <a
+          href="https://www.instagram.com/nicocaillet.raw/" 
           target="_blank" 
           rel="noopener noreferrer"
           className="footer-link hover:opacity-70 transition-opacity"
         >
           Instagram
         </a>
-        <a 
+        <a
+          href="https://www.behance.net/nicolas-caillet/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="footer-link hover:opacity-70 transition-opacity"
+        >
+          Behance
+        </a>
+        <a
+          href="https://www.linkedin.com/in/nicolas-caillet-57ab7a128/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          className="footer-link hover:opacity-70 transition-opacity"
+        >
+          Linkedin
+        </a>
+        <a
           href="/cgu-cgv" 
           className="footer-link hover:opacity-70 transition-opacity"
         >

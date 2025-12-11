@@ -18,14 +18,13 @@
           "villa-lumina-3.jpg"
         ]
       },
-      "materials": [
-        "Béton fibré",
-        "Verre structural",
-        "Acier corten",
-        "Bois de chêne"
+      "infos": [
+        "ISO : 800",
+        "f8",
+        "1/70"
       ],
       "description": "Une villa contemporaine intégrée dans un paysage naturel préservé. Le projet explore la relation entre intérieur et extérieur grâce à de grandes baies vitrées coulissantes et des espaces modulables. L'architecture épurée met en valeur les matériaux bruts et la lumière naturelle.",
-      "Model3D": "/yellow_dress.glb"
+      "Model3D": ""
     },
     {
       "title": "Musée des Arts Numériques",
@@ -43,11 +42,10 @@
           "musee-numerique-2.jpg"
         ]
       },
-      "materials": [
-        "Béton imprimé 3D",
-        "LED interactives",
-        "Panneaux acoustiques",
-        "Résine époxy"
+      "infos": [
+        "ISO : 800",
+        "f8",
+        "1/70"
       ],
       "description": "Un espace muséal dédié aux arts numériques où l'architecture devient elle-même une œuvre interactive. Les visiteurs évoluent dans un environnement responsive qui réagit à leur présence, créant une expérience immersive unique."
     },
@@ -67,14 +65,13 @@
           "musee-numerique-2.jpg"
         ]
       },
-      "materials": [
-        "Béton imprimé 3D",
-        "LED interactives",
-        "Panneaux acoustiques",
-        "Résine époxy"
+      "infos": [
+        "ISO : 800",
+        "f8",
+        "1/70"
       ],
       "description": "Un espace muséal dédié aux arts numériques où l'architecture devient elle-même une œuvre interactive. Les visiteurs évoluent dans un environnement responsive qui réagit à leur présence, créant une expérience immersive unique.",
-      "Model3D": "/black_dress.glb"
+      "Model3D": ""
     },
     {
       "title": "Bureau Évolutif",
@@ -93,14 +90,13 @@
           "bureau-evolutif-3.jpg"
         ]
       },
-      "materials": [
-        "Bois de hêtre",
-        "Métal laqué",
-        "Textiles techniques",
-        "Composites légers"
+      "infos": [
+        "ISO : 800",
+        "f8",
+        "1/70"
       ],
       "description": "Un espace de travail modulable conçu pour s'adapter aux différentes configurations de travail. Les cloisons mobiles et le mobilier transformable permettent de recréer l'espace selon les besoins du moment, favorisant à la fois la collaboration et la concentration.",
-      "Model3D": "/black_dress.glb"
+      "Model3D": ""
     },
     {
       "title": "Jardin Sensible",
@@ -118,14 +114,13 @@
           "jardin-sensible-2.jpg"
         ]
       },
-      "materials": [
-        "Acier inoxydable",
-        "Pierre locale",
-        "Végétation native",
-        "Capteurs environnementaux"
+      "infos": [
+        "ISO : 800",
+        "f8",
+        "1/70"
       ],
       "description": "Un jardin expérimental où la nature et la technologie dialoguent. Des capteurs mesurent les conditions environnementales et influencent des installations lumineuses et sonores, créant un écosystème artistique vivant et évolutif.",
-      "Model3D": "/black_dress.glb"
+      "Model3D": ""
     },
     {
       "title": "Test",
@@ -143,14 +138,13 @@
           "jardin-sensible-2.jpg"
         ]
       },
-      "materials": [
-        "Acier inoxydable",
-        "Pierre locale",
-        "Végétation native",
-        "Capteurs environnementaux"
+      "infos": [
+        "ISO : 800",
+        "f8",
+        "1/70"
       ],
       "description": "Un jardin expérimental où la nature et la technologie dialoguent. Des capteurs mesurent les conditions environnementales et influencent des installations lumineuses et sonores, créant un écosystème artistique vivant et évolutif.",
-      "Model3D": "/black_dress.glb"
+      "Model3D": ""
     }
   ]
 }

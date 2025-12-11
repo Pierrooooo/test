@@ -5,7 +5,7 @@ export interface Project {
   assets: {
     images: string[];
   };
-  materials: string[];
+  infos: string[];
   description: string;
   Model3D?: string;
 }
@@ -45,7 +45,6 @@ export interface ShopData {
 }
 
 export type ContentType = 'projects' | 'maisonDeVinci' | 'about' | 'shop';
-
 
 export interface FixedNameProps {
   firstName: string;

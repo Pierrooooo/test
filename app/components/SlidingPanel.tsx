@@ -2,6 +2,7 @@
 
 import React, {
   useState,
+  useRef,
   useEffect,
   forwardRef,
   useImperativeHandle,
@@ -16,6 +17,7 @@ import {
 } from "../types";
 import { usePanel } from "../context/PanelContext";
 import Link from "next/link";
+import { staggerTextAppear } from "@/app/animations/animations";
 
 interface SlidingPanelProps {
   onClose: () => void;
@@ -37,6 +39,8 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
     >(null);
     const [contentType, setContentType] = useState<ContentType | "">("");
     const { isOpen, closePanel } = usePanel();
+    const panelContentRef = useRef<HTMLDivElement>(null);
+    const animationTimelineRef = useRef<gsap.core.Timeline | null>(null);
 
     useEffect(() => {
       const panelElement = document.querySelector(
@@ -62,8 +66,13 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
         } else {
           gsap.to(panelElement, {
             x: "-100%",
-            duration: 0.8,
+            duration: 0.6,
             ease: "power3.inOut",
+            onComplete: () => {
+              resetAnimations();
+              setContent(null);
+              setContentType("");
+            }
           });
           gsap.to(overlayElement, {
             opacity: 0,
@@ -75,7 +84,85 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
       }
     }, [isOpen]);
 
+    const resetAnimations = () => {
+      if (animationTimelineRef.current) {
+        animationTimelineRef.current.kill();
+        animationTimelineRef.current = null;
+      }
+
+      if (panelContentRef.current) {
+        const allAnimatedElements = panelContentRef.current.querySelectorAll(
+          ".text-item, .text-paragraph, .contact-link"
+        );
+        
+        gsap.set(allAnimatedElements, {
+          clearProps: "all"
+        });
+      }
+    };
+
+    useEffect(() => {
+      if (content && panelContentRef.current && !("error" in content)) {
+        if (animationTimelineRef.current) {
+          animationTimelineRef.current.kill();
+        }
+
+        const mainTimeline = gsap.timeline();
+
+        setTimeout(() => {
+          const textItems = panelContentRef.current?.querySelectorAll(".text-item");
+          if (textItems && textItems.length > 0) {
+            const tl = staggerTextAppear(Array.from(textItems) as HTMLElement[], {
+              delay: 0.2,
+              duration: 0.6,
+              stagger: 0.05,
+              yOffset: 20,
+              ease: "power3.out",
+            });
+            if (tl) mainTimeline.add(tl, 0);
+          }
+
+          if (contentType === "about" || contentType === "maisonDeVinci") {
+            const paragraphs = panelContentRef.current?.querySelectorAll(".text-paragraph");
+            if (paragraphs && paragraphs.length > 0) {
+              const tl = staggerTextAppear(Array.from(paragraphs) as HTMLElement[], {
+                delay: 0.3,
+                duration: 0.6,
+                stagger: 0.1,
+                yOffset: 30,
+                ease: "power3.out",
+              });
+              if (tl) mainTimeline.add(tl, 0);
+            }
+          }
+
+          if (contentType === "about") {
+            const contactLinks = panelContentRef.current?.querySelectorAll(".contact-link");
+            if (contactLinks && contactLinks.length > 0) {
+              const tl = staggerTextAppear(Array.from(contactLinks) as HTMLElement[], {
+                delay: 0.5,
+                duration: 0.5,
+                stagger: 0.08,
+                yOffset: 15,
+                ease: "power3.out",
+              });
+              if (tl) mainTimeline.add(tl, 0);
+            }
+          }
+
+          animationTimelineRef.current = mainTimeline;
+        }, 50);
+
+        return () => {
+          if (animationTimelineRef.current) {
+            animationTimelineRef.current.kill();
+          }
+        };
+      }
+    }, [content, contentType]);
+
     const loadContent = async (type: ContentType) => {
+      resetAnimations();
       setContentType(type);
 
       try {
@@ -128,11 +215,11 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
           const projectsData = content as ProjectsData;
           return (
             <div className="projects-content">
-              <h1 className="text-3xl md:text-4xl font-bold mb-8 dark:text-white">
+              <h1 className="text-item text-3xl md:text-4xl font-bold mb-8 dark:text-white opacity-0 translate-y-5">
                 {projectsData.title || "Projets"}
               </h1>
               <div>
-                <div className="grid grid-cols-3 pb-2">
+                <div className="text-item grid grid-cols-3 pb-2 opacity-0 translate-y-5">
                   <span>Projets</span>
                   <span>Categorie</span>
                   <span className="text-right">Année</span>
@@ -142,7 +229,7 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
                     <a
                       key={index}
                       href={`/projects/${index}`}
-                      className="block project-item cursor-pointer transition-colors duration-200 py-1 my-1 rounded-lg"
+                      className="text-item block project-item cursor-pointer transition-colors duration-200 py-1 my-1 rounded-lg opacity-0 translate-y-5"
                     >
                       <div className="grid grid-cols-3 ">
                         <h2 className="w-fit">{project.title}</h2>
@@ -157,7 +244,7 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
               <div className="fixed bottom-24 md:w-full max-w-4xl md:p-6 md:p-24 mx-auto flex justify-end">
                 <Link
                   href="/projects"
-                  className="text-right text-gray-600 hover:text-black dark:hover:text-white hover:cursor-pointer transition-colors"
+                  className="text-item text-right text-gray-600 hover:text-black dark:hover:text-white hover:cursor-pointer transition-colors opacity-0 translate-y-5"
                 >
                   Voir tous les projets
                 </Link>
@@ -169,14 +256,14 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
           const maisonData = content as MaisonDeVinciData;
           return (
             <div className="maison-content">
-              <h1 className="text-3xl md:text-4xl font-bold mb-8 dark:text-white">
+              <h1 className="text-item text-3xl md:text-4xl font-bold mb-8 dark:text-white opacity-0 translate-y-5">
                 {maisonData.title}
               </h1>
               {maisonData.paragraphs &&
                 maisonData.paragraphs.map((paragraph, index) => (
                   <p
                     key={index}
-                    className="mb-4 text-gray-700 leading-relaxed dark:text-gray-300"
+                    className="text-paragraph mb-4 text-gray-700 leading-relaxed dark:text-gray-300 opacity-0 translate-y-[30px]"
                   >
                     {paragraph}
                   </p>
@@ -188,14 +275,14 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
           const aboutData = content as AboutData;
           return (
             <div className="about-content">
-              <h1 className="text-3xl md:text-4xl font-bold mb-8 dark:text-white">
+              <h1 className="text-item text-3xl md:text-4xl font-bold mb-8 dark:text-white opacity-0 translate-y-5">
                 {aboutData.title || "À Propos"}
               </h1>
               {aboutData.paragraphs &&
                 aboutData.paragraphs.map((paragraph, index) => (
                   <p
                     key={index}
-                    className="mb-4 text-gray-700 leading-relaxed dark:text-gray-300"
+                    className="text-paragraph mb-4 text-gray-700 leading-relaxed dark:text-gray-300 opacity-0 translate-y-[30px]"
                   >
                     {paragraph}
                   </p>
@@ -204,7 +291,7 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
                 <div className="contact-info mt-8 flex flex-col gap-4">
                   <a
                     href={`mailto:${aboutData.contact.email}`}
-                    className="email-link font-medium text-black dark:text-white hover:underline"
+                    className="contact-link email-link font-medium text-black dark:text-white hover:underline opacity-0 translate-y-[15px]"
                   >
                     {aboutData.contact.email}
                   </a>
@@ -213,7 +300,7 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
                       <a
                         key={index}
                         href={link.url}
-                        className="external-link font-medium text-black dark:text-white hover:underline"
+                        className="contact-link external-link font-medium text-black dark:text-white hover:underline opacity-0 translate-y-[15px]"
                       >
                         {link.label}
                       </a>
@@ -227,10 +314,10 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
           const shopData = content as ShopData;
           return (
             <div className="shop-content">
-              <h1 className="text-3xl md:text-4xl font-bold mb-8 dark:text-white">
+              <h1 className="text-item text-3xl md:text-4xl font-bold mb-8 dark:text-white opacity-0 translate-y-5">
                 {shopData.title || "Boutique"}
               </h1>
-              <p className="construction-message text-xl text-gray-600 text-center mt-8 dark:text-gray-400">
+              <p className="text-item construction-message text-xl text-gray-600 text-center mt-8 dark:text-gray-400 opacity-0 translate-y-5">
                 {shopData.message || "En cours de construction"}
               </p>
             </div>
@@ -244,7 +331,7 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
     return (
       <>
         <div
-          className="sliding-overlay fixed inset-0 bg-black/10 backdrop-blur-sm opacity-0 pointer-events-none z-40 transition-all"
+          className="sliding-overlay cursor-pointer fixed inset-0 bg-black/10 backdrop-blur-sm opacity-0 pointer-events-none z-40 transition-all"
           onClick={handleClose}
         ></div>
         <div className="sliding-panel fixed top-0 left-0 w-full md:w-[70%] h-screen bg-white dark:bg-black transform -translate-x-full z-50 overflow-y-auto">
@@ -254,7 +341,7 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
           >
             ×
           </button>
-          <div className="panel-content min-h-full relative p-6 md:p-12 max-w-4xl mx-auto">
+          <div ref={panelContentRef} className="panel-content min-h-full relative p-6 md:p-12 max-w-4xl mx-auto">
             {renderContent()}
           </div>
         </div>

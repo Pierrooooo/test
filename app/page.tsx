@@ -9,7 +9,7 @@ const HOMEPAGE_PROJECTS = [
   "Villa Lumina",
   "Musée des Arts Numériques",
   "Bureau Évolutif",
-];
+]
 
 interface Project {
   title: string;
@@ -18,7 +18,7 @@ interface Project {
   assets: {
     images: string[];
   };
-  materials: string[];
+  infos: string[];
   description: string;
 }
 
@@ -66,7 +66,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen dark:bg-black py-16 px-8 pt-24">
-      <FixedName firstName="Maxime" lastName="Becker"/>
+      <FixedName firstName="Nicolas" lastName="Caillet"/>
       <div className="max-w-8xl w-full mx-auto md:mt-20 lg:mt-40">
         <div className="flex flex-col gap-16">
           {homepageProjects.map((project, index) => (
