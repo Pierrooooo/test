@@ -16,7 +16,7 @@ import {
   ContentType,
 } from "../types";
 import { usePanel } from "../context/PanelContext";
-import Link from "next/link";
+import TransitionLink from "./TransitionLink";
 import { staggerTextAppear } from "@/app/animations/animations";
 
 interface SlidingPanelProps {
@@ -226,28 +226,28 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
                 </div>
                 {projectsData.projects &&
                   projectsData.projects.map((project, index) => (
-                    <a
+                    <TransitionLink
                       key={index}
                       href={`/projects/${index}`}
                       className="text-item block project-item cursor-pointer transition-colors duration-200 py-1 my-1 rounded-lg opacity-0 translate-y-5"
                     >
-                      <div className="grid grid-cols-3 ">
+                      <div onClick={handleClose} className="grid grid-cols-3">
                         <h2 className="w-fit">{project.title}</h2>
                         <span className="category italic">
                           {project.category}
                         </span>
                         <span className="year text-right">{project.year}</span>
                       </div>
-                    </a>
+                    </TransitionLink>
                   ))}
               </div>
               <div className="fixed bottom-24 md:w-full max-w-4xl md:p-6 md:p-24 mx-auto flex justify-end">
-                <Link
+                <TransitionLink
                   href="/projects"
                   className="text-item text-right text-gray-600 hover:text-black dark:hover:text-white hover:cursor-pointer transition-colors opacity-0 translate-y-5"
                 >
                   Voir tous les projets
-                </Link>
+                </TransitionLink>
               </div>
             </div>
           );

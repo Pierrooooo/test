@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
+import TransitionLink from "../components/TransitionLink";
 import { ProjectsData } from "../types";
 import Image from "next/image";
 
@@ -67,7 +67,7 @@ export default function ProjectsPage() {
   if (!projectsData) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        Chargement...
+        
       </div>
     );
   }
@@ -119,7 +119,7 @@ export default function ProjectsPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-4 mt-10">
           {filteredProjects.map((project, index) => (
-            <Link
+            <TransitionLink
               key={index}
               href={`/projects/${index}`}
               className="group block"
@@ -142,7 +142,7 @@ export default function ProjectsPage() {
               <h2 className="mt-1 text-sm font-medium dark:text-white">
                 {project.title}
               </h2>
-            </Link>
+            </TransitionLink>
           ))}
         </div>
       </div>

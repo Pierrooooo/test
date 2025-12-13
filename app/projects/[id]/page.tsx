@@ -2,10 +2,13 @@
 
 import React from "react";
 import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useParams, useRouter } from "next/navigation";
 import { ProjectsData, Project } from "../../types";
-import Link from "next/link";
+import TransitionLink from "../../components/TransitionLink";
 import Reusable3DModelCanvas from "../../components/3DModel";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function ProjectDetailPage() {
   const params = useParams();
@@ -14,12 +17,13 @@ export default function ProjectDetailPage() {
   const [projectsData, setProjectsData] = React.useState<ProjectsData | null>(
     null
   );
-  
+
   const titleRef = React.useRef(null);
   const categoryYearRef = React.useRef(null);
   const detailsTitlesContainerRef = React.useRef<HTMLDivElement | null>(null);
   const detailsValuesContainerRef = React.useRef<HTMLDivElement | null>(null);
   const mainImageRef = React.useRef(null);
+  const imagesRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     if (!project) return;
@@ -39,16 +43,16 @@ export default function ProjectDetailPage() {
         { y: 0, opacity: 1, duration: 0.6 },
         "-=0.6"
       )
-      // Tous les titres en même temps
       .fromTo(
-        detailsTitlesContainerRef.current?.querySelectorAll('.detail-title') || [],
+        detailsTitlesContainerRef.current?.querySelectorAll(".detail-title") ||
+          [],
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.6 },
         "-=0.4"
       )
-      // Les valeurs avec stagger
       .fromTo(
-        detailsValuesContainerRef.current?.querySelectorAll('.detail-value') || [],
+        detailsValuesContainerRef.current?.querySelectorAll(".detail-value") ||
+          [],
         { y: 20, opacity: 0 },
         { y: 0, opacity: 1, duration: 0.5, stagger: 0.15 },
         "-=0.4"
@@ -64,6 +68,44 @@ export default function ProjectDetailPage() {
       tl.kill();
     };
   }, [project]);
+
+  // Animation au scroll pour les .image-item
+  React.useEffect(() => {
+    if (!imagesRef.current || !project?.assets?.images) return;
+
+    const timer = setTimeout(() => {
+      const imageItems = imagesRef.current?.querySelectorAll(".image-item");
+
+      if (!imageItems || imageItems.length === 0) {
+        console.log("Aucun .image-item trouvé");
+        return;
+      }
+
+      imageItems.forEach((item) => {
+        gsap.fromTo(
+          item,
+          { y: "50%", scaleY: 0.6, scaleX: 0.8, opacity: 0 },
+          {
+            y: 0,
+            scale: 1,
+            opacity: 1,
+            duration: 1.2,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top-=100 bottom",
+              toggleActions: "play none none none",
+            },
+          }
+        );
+      });
+    }, 100); // Petit délai pour s'assurer que le DOM est prêt
+
+    return () => {
+      clearTimeout(timer);
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [project]); // Dépendance sur project pour se relancer quand les données changent
 
   React.useEffect(() => {
     const loadProject = async () => {
@@ -92,9 +134,7 @@ export default function ProjectDetailPage() {
 
   if (!project || !projectsData) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        Chargement…
-      </div>
+      <div className="min-h-screen flex items-center justify-center"></div>
     );
   }
 
@@ -123,18 +163,24 @@ export default function ProjectDetailPage() {
         </div>
 
         <div className="mb-12" ref={detailsValuesContainerRef}>
-          <div 
+          <div
             ref={detailsTitlesContainerRef}
             className="flex flex-row justify-between w-full space-y-2 text-gray-700 dark:text-gray-300"
           >
             <div className="font-semibold text-gray-900 dark:text-white">
               {project.category?.trim() && (
                 <>
-                  <span className="uppercase text-sm detail-title" style={{ opacity: 0 }}>
+                  <span
+                    className="uppercase text-sm detail-title"
+                    style={{ opacity: 0 }}
+                  >
                     Catégorie :
                   </span>{" "}
                   <br></br>{" "}
-                  <span className="mt-2 text-sm detail-value" style={{ opacity: 0 }}>
+                  <span
+                    className="mt-2 text-sm detail-value"
+                    style={{ opacity: 0 }}
+                  >
                     {project.category}
                   </span>
                 </>
@@ -143,11 +189,17 @@ export default function ProjectDetailPage() {
             <div className="font-semibold text-gray-900 dark:text-white">
               {String(project.year ?? "").trim() && (
                 <>
-                  <span className="uppercase text-sm detail-title" style={{ opacity: 0 }}>
+                  <span
+                    className="uppercase text-sm detail-title"
+                    style={{ opacity: 0 }}
+                  >
                     Année :
                   </span>{" "}
                   <br></br>{" "}
-                  <span className="mt-2 text-sm detail-value" style={{ opacity: 0 }}>
+                  <span
+                    className="mt-2 text-sm detail-value"
+                    style={{ opacity: 0 }}
+                  >
                     {project.year}
                   </span>
                 </>
@@ -156,12 +208,19 @@ export default function ProjectDetailPage() {
             <div className="font-semibold text-gray-900 dark:text-white">
               {project.infos?.length > 0 && (
                 <div>
-                  <span className="uppercase text-sm detail-title" style={{ opacity: 0 }}>
+                  <span
+                    className="uppercase text-sm detail-title"
+                    style={{ opacity: 0 }}
+                  >
                     Infos :
                   </span>
                   <ul className="mt-2 text-sm">
                     {project.infos.map((m: string, i: number) => (
-                      <li key={i} className="detail-value" style={{ opacity: 0 }}>
+                      <li
+                        key={i}
+                        className="detail-value"
+                        style={{ opacity: 0 }}
+                      >
                         {m}
                       </li>
                     ))}
@@ -174,7 +233,10 @@ export default function ProjectDetailPage() {
       </div>
 
       {project.assets.images?.length > 0 && (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16">
+        <div
+          ref={imagesRef}
+          className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-16"
+        >
           <div
             className="md:col-span-2"
             ref={mainImageRef}
@@ -188,7 +250,7 @@ export default function ProjectDetailPage() {
           </div>
           {project.assets.images.map((image: string, i: number) =>
             i === 0 ? null : (
-              <div key={i}>
+              <div key={i} className="image-item">
                 <img
                   src={`/assets/images/${image}`}
                   alt={`${project.title} – Image ${i + 1}`}
@@ -208,43 +270,36 @@ export default function ProjectDetailPage() {
         </div>
       )}
 
-      {project.Model3D?.trim() && (
-        <Reusable3DModelCanvas file={`/assets/models${project.Model3D}`} />
-      )}
-
       <div className="flex justify-between text-sm mt-20 py-6">
         <div className="max-w-6xl w-full mx-auto flex flex-row justify-between">
-          <button
-            disabled={parseInt(params.id as string) === 0}
-            onClick={() => {
-              const prev = parseInt(params.id as string) - 1;
-              if (prev >= 0) router.push(`/projects/${prev}`);
-            }}
-            className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white disabled:opacity-0 hover:cursor-pointer disabled:cursor-default transition-colors"
+          <TransitionLink
+            href={`/projects/${parseInt(params.id as string) - 1}`}
+            className={`text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors ${
+              parseInt(params.id as string) === 0
+                ? "opacity-0 pointer-events-none cursor-default"
+                : "hover:cursor-pointer"
+            }`}
           >
             ← Projet précédent
-          </button>
+          </TransitionLink>
 
-          <Link
+          <TransitionLink
             href="/projects"
             className="text-gray-600 hover:text-black dark:hover:text-white hover:cursor-pointer transition-colors"
           >
             Voir tous les projets
-          </Link>
+          </TransitionLink>
 
-          <button
-            disabled={
+          <TransitionLink
+            href={`/projects/${parseInt(params.id as string) + 1}`}
+            className={`text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition-colors ${
               parseInt(params.id as string) === projectsData.projects.length - 1
-            }
-            onClick={() => {
-              const next = parseInt(params.id as string) + 1;
-              if (next < projectsData.projects.length)
-                router.push(`/projects/${next}`);
-            }}
-            className="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white disabled:opacity-0 hover:cursor-pointer disabled:cursor-default transition-colors"
+                ? "opacity-0 pointer-events-none cursor-default"
+                : "hover:cursor-pointer"
+            }`}
           >
             Projet suivant →
-          </button>
+          </TransitionLink>
         </div>
       </div>
     </div>

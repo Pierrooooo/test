@@ -1,3 +1,5 @@
+import { ReactNode } from 'react';
+
 export interface Project {
   title: string;
   category: string;
@@ -49,4 +51,10 @@ export type ContentType = 'projects' | 'maisonDeVinci' | 'about' | 'shop';
 export interface FixedNameProps {
   firstName: string;
   lastName: string;
+}
+
+export interface TransitionLinkProps {
+  href: string;
+  children: ReactNode;
+  className?: string;
 }

@@ -4,6 +4,7 @@ import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import FixedName from "./components/FixedName";
+import TransitionLink from "./components/TransitionLink";
 
 const HOMEPAGE_PROJECTS = [
   "Villa Lumina",
@@ -58,7 +59,7 @@ export default function Home() {
     return (
       <div className="flex flex-1 items-center justify-center py-32 px-4 sm:pt-24 dark:bg-black">
         <div className="text-center text-gray-500 dark:text-gray-400">
-          Chargement...
+          
         </div>
       </div>
     );
@@ -81,7 +82,7 @@ export default function Home() {
                   <span>{project.year}</span>
                 </p>
               </div>
-              <Link
+              <TransitionLink
                 href={`/projects/${projectsData.projects.findIndex(
                   (p) => p.title === project.title
                 )}`}
@@ -109,7 +110,7 @@ export default function Home() {
                 <p className="max-w-4xl mx-auto text-black dark:text-white tracking-wide mb-24">
                   {project.title}
                 </p>
-              </Link>
+              </TransitionLink>
             </div>
           ))}
         </div>
@@ -124,12 +125,12 @@ export default function Home() {
           </div>
         )}
         <div className="text-center mt-16">
-          <Link
+          <TransitionLink
             href="/projects"
             className="inline-block border border-black dark:border-white px-6 py-3 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors duration-200"
           >
             Voir tous les projets
-          </Link>
+          </TransitionLink>
         </div>
       </div>
     </div>
