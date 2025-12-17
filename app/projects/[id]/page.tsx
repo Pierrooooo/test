@@ -6,7 +6,10 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useParams, useRouter } from "next/navigation";
 import { ProjectsData, Project } from "../../types";
 import TransitionLink from "../../components/TransitionLink";
-import Reusable3DModelCanvas from "../../components/3DModel";
+import {
+  animateImageElement,
+  animateTextElement,
+} from "../../animations/animationsGSAP";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -24,6 +27,8 @@ export default function ProjectDetailPage() {
   const detailsValuesContainerRef = React.useRef<HTMLDivElement | null>(null);
   const mainImageRef = React.useRef(null);
   const imagesRef = React.useRef<HTMLDivElement | null>(null);
+  const descriptionRef = React.useRef<HTMLParagraphElement | null>(null);
+  const projectsNavRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     if (!project) return;
@@ -31,6 +36,8 @@ export default function ProjectDetailPage() {
     const tl = gsap.timeline({
       defaults: { ease: "power3.out" },
     });
+
+    tl.pause();
 
     tl.fromTo(
       titleRef.current,
@@ -64,12 +71,14 @@ export default function ProjectDetailPage() {
         "-=1"
       );
 
+    tl.play();
+
     return () => {
       tl.kill();
     };
   }, [project]);
 
-  // Animation au scroll pour les .image-item
+  // Animation des images de la galerie au scroll
   React.useEffect(() => {
     if (!imagesRef.current || !project?.assets?.images) return;
 
@@ -82,30 +91,21 @@ export default function ProjectDetailPage() {
       }
 
       imageItems.forEach((item) => {
-        gsap.fromTo(
-          item,
-          { y: "50%", scaleY: 0.6, scaleX: 0.8, opacity: 0 },
-          {
-            y: 0,
-            scale: 1,
-            opacity: 1,
-            duration: 1.2,
-            ease: "power3.out",
-            scrollTrigger: {
-              trigger: item,
-              start: "top-=100 bottom",
-              toggleActions: "play none none none",
-            },
-          }
-        );
+        animateImageElement(item);
       });
-    }, 100); // Petit délai pour s'assurer que le DOM est prêt
+    }, 100);
 
     return () => {
       clearTimeout(timer);
       ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
-  }, [project]); // Dépendance sur project pour se relancer quand les données changent
+  }, [project]);
+
+  // Animation de la description au scroll
+  React.useEffect(() => {
+    if (!project?.description) return;
+    return animateTextElement(descriptionRef as React.RefObject<HTMLElement>);
+  }, [project]);
 
   React.useEffect(() => {
     const loadProject = async () => {
@@ -129,7 +129,10 @@ export default function ProjectDetailPage() {
 
     if (params.id) {
       loadProject();
+
+    return animateTextElement(projectsNavRef as React.RefObject<HTMLElement>);
     }
+ 
   }, [params.id, router]);
 
   if (!project || !projectsData) {
@@ -250,7 +253,8 @@ export default function ProjectDetailPage() {
           </div>
           {project.assets.images.map((image: string, i: number) =>
             i === 0 ? null : (
-              <div key={i} className="image-item">
+              <div key={i} className="image-item"
+              style={{ opacity: 0 }}>
                 <img
                   src={`/assets/images/${image}`}
                   alt={`${project.title} – Image ${i + 1}`}
@@ -264,13 +268,20 @@ export default function ProjectDetailPage() {
 
       {project.description.trim() && (
         <div className="md:col-span-2 max-w-3xl mx-auto my-30">
-          <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-line">
+          <p
+            ref={descriptionRef}
+            style={{ opacity: 0 }}
+            className="description-text text-lg leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-line"
+          >
             {project.description}
           </p>
         </div>
       )}
 
-      <div className="flex justify-between text-sm mt-20 py-6">
+      <div
+        ref={projectsNavRef}
+        className="flex justify-between text-sm mt-20 py-6"
+      >
         <div className="max-w-6xl w-full mx-auto flex flex-row justify-between">
           <TransitionLink
             href={`/projects/${parseInt(params.id as string) - 1}`}

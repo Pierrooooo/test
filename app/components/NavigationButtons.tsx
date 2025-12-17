@@ -54,7 +54,7 @@ const NavigationButtons: React.FC = () => {
         />
 
         <div
-          className={`fixed top-0 left-0 w-full h-full bg-white dark:bg-gray-900 z-40 flex flex-col items-center justify-center gap-8 transition-transform duration-500 ${
+          className={`fixed top-0 left-0 w-full h-full bg-white dark:bg-black z-40 flex flex-col items-center justify-center gap-8 transition-transform duration-500 ${
             isMenuOpen ? "translate-x-0" : "-translate-x-full"
           }`}
         >

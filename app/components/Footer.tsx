@@ -3,6 +3,7 @@
 import React, { useEffect } from 'react';
 import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
+import TransitionLink from './TransitionLink';
 
 // Enregistrer le plugin
 if (typeof window !== 'undefined') {
@@ -51,12 +52,12 @@ const Footer = () => {
         >
           Linkedin
         </a>
-        <a
+        <TransitionLink
           href="/cgu-cgv" 
           className="footer-link hover:opacity-70 transition-opacity"
         >
           CGU & CGV
-        </a>
+        </TransitionLink>
       </div>
       
       <div className="footer-right">

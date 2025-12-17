@@ -4,6 +4,11 @@ import React from "react";
 import TransitionLink from "../components/TransitionLink";
 import { ProjectsData } from "../types";
 import Image from "next/image";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  animateImageElement,
+  animateTextElement,
+} from "../animations/animationsGSAP";
 
 export default function ProjectsPage() {
   const [projectsData, setProjectsData] = React.useState<ProjectsData | null>(
@@ -13,6 +18,9 @@ export default function ProjectsPage() {
   const [selectedCategory, setSelectedCategory] = React.useState<string | null>(
     null
   );
+
+  const projectsGridRef = React.useRef<HTMLDivElement | null>(null);
+  const titleRef = React.useRef<HTMLHeadingElement | null>(null);
 
   React.useEffect(() => {
     const loadProjects = async () => {
@@ -26,18 +34,15 @@ export default function ProjectsPage() {
     loadProjects();
   }, []);
 
+  React.useEffect(() => {
+    if (!titleRef.current) return;
+    return animateTextElement(titleRef as React.RefObject<HTMLElement>);
+  }, []);
+
   const years = React.useMemo(() => {
     if (!projectsData) return [];
     const allYears = projectsData.projects.map((project) => project.year);
     return Array.from(new Set(allYears)).sort((a, b) => b - a);
-  }, [projectsData]);
-
-  const categories = React.useMemo(() => {
-    if (!projectsData) return [];
-    const allCategories = projectsData.projects.map(
-      (project) => project.category
-    );
-    return Array.from(new Set(allCategories)).sort();
   }, [projectsData]);
 
   const filteredProjects = React.useMemo(() => {
@@ -50,6 +55,42 @@ export default function ProjectsPage() {
       return yearMatch && categoryMatch;
     });
   }, [projectsData, selectedYear, selectedCategory]);
+
+  React.useEffect(() => {
+    if (!projectsGridRef.current || !projectsData) return;
+
+    const timer = setTimeout(() => {
+      const projectCards = projectsGridRef.current?.querySelectorAll(".project-image");
+      const projectTitles = projectsGridRef.current?.querySelectorAll(".project-title");
+
+      if (!projectCards || projectCards.length === 0) {
+        return;
+      }
+
+      if (projectTitles && projectTitles.length > 0) {
+        projectTitles.forEach((title) => {
+          animateTextElement({ current: title as HTMLElement });
+        });
+      }
+
+      projectCards.forEach((card) => {
+        animateImageElement(card);
+      });
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [projectsData, filteredProjects]);
+
+  const categories = React.useMemo(() => {
+    if (!projectsData) return [];
+    const allCategories = projectsData.projects.map(
+      (project) => project.category
+    );
+    return Array.from(new Set(allCategories)).sort();
+  }, [projectsData]);
 
   const handleYearClick = (year: number) => {
     setSelectedYear(selectedYear === year ? null : year);
@@ -85,7 +126,7 @@ export default function ProjectsPage() {
                   : "text-gray-500 dark:text-gray-400"
               } cursor-pointer hover:text-black dark:hover:text-white transition-colors`}
             >
-              <h1>Projets</h1>
+              <h1 ref={titleRef}>Projets</h1>
             </button>
             {years.map((year) => (
               <button
@@ -117,14 +158,17 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-4 mt-10">
+        <div 
+          ref={projectsGridRef}
+          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-4 mt-10"
+        >
           {filteredProjects.map((project, index) => (
             <TransitionLink
               key={index}
               href={`/projects/${index}`}
               className="group block"
             >
-              <div className="relative w-full h-64 overflow-hidden border border-black dark:border-white">
+              <div className="project-image relative w-full h-64 overflow-hidden border border-black dark:border-white">
                 {project.assets.images && project.assets.images.length > 0 ? (
                   <Image
                     src={`/assets/images/${project.assets.images[0]}`}
@@ -139,7 +183,7 @@ export default function ProjectsPage() {
                 )}
               </div>
 
-              <h2 className="mt-1 text-sm font-medium dark:text-white">
+              <h2 className="project-title mt-1 text-sm font-medium dark:text-white">
                 {project.title}
               </h2>
             </TransitionLink>

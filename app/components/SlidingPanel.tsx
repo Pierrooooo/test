@@ -214,7 +214,7 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
         case "projects":
           const projectsData = content as ProjectsData;
           return (
-            <div className="projects-content">
+            <div className="projects-content pb-24">
               <h1 className="text-item text-3xl md:text-4xl font-bold mb-8 dark:text-white opacity-0 translate-y-5">
                 {projectsData.title || "Projets"}
               </h1>
@@ -231,7 +231,7 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
                       href={`/projects/${index}`}
                       className="text-item block project-item cursor-pointer transition-colors duration-200 py-1 my-1 rounded-lg opacity-0 translate-y-5"
                     >
-                      <div onClick={handleClose} className="grid grid-cols-3">
+                      <div className="grid grid-cols-3">
                         <h2 className="w-fit">{project.title}</h2>
                         <span className="category italic">
                           {project.category}
@@ -241,7 +241,7 @@ const SlidingPanel = forwardRef<SlidingPanelHandle, SlidingPanelProps>(
                     </TransitionLink>
                   ))}
               </div>
-              <div className="fixed bottom-24 md:w-full max-w-4xl md:p-6 md:p-24 mx-auto flex justify-end">
+              <div className="absolute bottom-0 md:w-full max-w-4xl md:p-6 md:p-24 mx-auto flex justify-end">
                 <TransitionLink
                   href="/projects"
                   className="text-item text-right text-gray-600 hover:text-black dark:hover:text-white hover:cursor-pointer transition-colors opacity-0 translate-y-5"
