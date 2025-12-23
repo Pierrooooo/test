@@ -3,10 +3,6 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 gsap.registerPlugin(ScrollTrigger);
 
-/**
- * Animation au scroll pour un élément image
- * @param element - L'élément à animer
- */
 export const animateImageElement = (element: Element) => {
   gsap.fromTo(
     element,
@@ -26,10 +22,6 @@ export const animateImageElement = (element: Element) => {
   );
 };
 
-/**
- * Animation au scroll pour un élément texte
- * @param elementRef - Référence à l'élément à animer
- */
 export const animateTextElement = (elementRef: React.RefObject<HTMLElement>) => {
   if (!elementRef.current) return;
 
@@ -57,4 +49,20 @@ export const animateTextElement = (elementRef: React.RefObject<HTMLElement>) => 
     clearTimeout(timer);
     ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
   };
+};
+
+export const animateTextElementImmediate = (elementRef: React.RefObject<HTMLElement>) => {
+  if (!elementRef.current) return;
+
+  gsap.fromTo(
+    elementRef.current,
+    { y: 30, opacity: 0 },
+    {
+      y: 0,
+      opacity: 1,
+      duration: 1,
+      ease: "power3.out",
+      delay: 0.2,
+    }
+  );
 };

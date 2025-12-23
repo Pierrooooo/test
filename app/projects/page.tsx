@@ -60,8 +60,10 @@ export default function ProjectsPage() {
     if (!projectsGridRef.current || !projectsData) return;
 
     const timer = setTimeout(() => {
-      const projectCards = projectsGridRef.current?.querySelectorAll(".project-image");
-      const projectTitles = projectsGridRef.current?.querySelectorAll(".project-title");
+      const projectCards =
+        projectsGridRef.current?.querySelectorAll(".project-image");
+      const projectTitles =
+        projectsGridRef.current?.querySelectorAll(".project-title");
 
       if (!projectCards || projectCards.length === 0) {
         return;
@@ -107,14 +109,12 @@ export default function ProjectsPage() {
 
   if (!projectsData) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        
-      </div>
+      <div className="min-h-screen flex items-center justify-center"></div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black py-12 px-4 sm:pt-24">
+    <div className="min-h-screen bg-white dark:bg-black py-12 px-4 sm:pt-24 min-h-screen">
       <div className="max-w-6xl mx-auto md:mt-20 lg:mt-40">
         <div className="my-8">
           <div className="flex flex-wrap gap-x-4 mb-4">
@@ -158,7 +158,7 @@ export default function ProjectsPage() {
           </div>
         </div>
 
-        <div 
+        <div
           ref={projectsGridRef}
           className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-x-10 gap-y-4 mt-10"
         >
@@ -168,7 +168,10 @@ export default function ProjectsPage() {
               href={`/projects/${index}`}
               className="group block"
             >
-              <div className="project-image relative w-full h-64 overflow-hidden border border-black dark:border-white">
+              <div
+                style={{ opacity: 0 }}
+                className="project-image w-full border h-64 border-black dark:border-white overflow-hidden mb-4"
+              >
                 {project.assets.images && project.assets.images.length > 0 ? (
                   <Image
                     src={`/assets/images/${project.assets.images[0]}`}
@@ -183,7 +186,10 @@ export default function ProjectsPage() {
                 )}
               </div>
 
-              <h2 className="project-title mt-1 text-sm font-medium dark:text-white">
+              <h2
+                style={{ opacity: 0 }}
+                className="project-title mt-1 text-sm font-medium dark:text-white"
+              >
                 {project.title}
               </h2>
             </TransitionLink>

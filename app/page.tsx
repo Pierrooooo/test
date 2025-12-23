@@ -1,10 +1,16 @@
 "use client";
 
 import React from "react";
-import Link from "next/link";
 import Image from "next/image";
 import FixedName from "./components/FixedName";
 import TransitionLink from "./components/TransitionLink";
+import { ProjectsData, Project } from "./types";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+import {
+  animateImageElement,
+  animateTextElement,
+  animateTextElementImmediate,
+} from "./animations/animationsGSAP";
 
 const HOMEPAGE_PROJECTS = [
   "Villa Lumina",
@@ -12,27 +18,15 @@ const HOMEPAGE_PROJECTS = [
   "Bureau Évolutif",
 ]
 
-interface Project {
-  title: string;
-  category: string;
-  year: number;
-  assets: {
-    images: string[];
-  };
-  infos: string[];
-  description: string;
-}
-
-interface ProjectsData {
-  title: string;
-  projects: Project[];
-}
-
 export default function Home() {
   const [projectsData, setProjectsData] = React.useState<ProjectsData | null>(
     null
   );
   const [homepageProjects, setHomepageProjects] = React.useState<Project[]>([]);
+
+  const projectsContainerRef = React.useRef<HTMLDivElement | null>(null);
+  const ctaButtonRef = React.useRef<HTMLDivElement | null>(null);
+  const fixedNameRef = React.useRef<HTMLDivElement | null>(null);
 
   React.useEffect(() => {
     const loadProjects = async () => {
@@ -55,6 +49,49 @@ export default function Home() {
     }
   }, [projectsData]);
 
+  React.useEffect(() => {
+    if (!fixedNameRef.current) return;
+    animateTextElementImmediate(fixedNameRef as React.RefObject<HTMLElement>);
+  }, []);
+
+  React.useEffect(() => {
+    if (!projectsContainerRef.current || homepageProjects.length === 0) return;
+
+    const timer = setTimeout(() => {
+      const projectImages = projectsContainerRef.current?.querySelectorAll(".project-image");
+      const projectTitles = projectsContainerRef.current?.querySelectorAll(".project-title");
+      const projectInfos = projectsContainerRef.current?.querySelectorAll(".project-info");
+
+      if (projectImages && projectImages.length > 0) {
+        projectImages.forEach((image) => {
+          animateImageElement(image);
+        });
+      }
+
+      if (projectTitles && projectTitles.length > 0) {
+        projectTitles.forEach((title) => {
+          animateTextElement({ current: title as HTMLElement });
+        });
+      }
+
+      if (projectInfos && projectInfos.length > 0) {
+        projectInfos.forEach((info) => {
+          animateTextElement({ current: info as HTMLElement });
+        });
+      }
+    }, 100);
+
+    return () => {
+      clearTimeout(timer);
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+    };
+  }, [homepageProjects]);
+
+  React.useEffect(() => {
+    if (!ctaButtonRef.current) return;
+    return animateTextElement(ctaButtonRef as React.RefObject<HTMLElement>);
+  }, [homepageProjects]);
+
   if (!projectsData) {
     return (
       <div className="flex flex-1 items-center justify-center py-32 px-4 sm:pt-24 dark:bg-black">
@@ -67,12 +104,14 @@ export default function Home() {
 
   return (
     <div className="min-h-screen dark:bg-black py-16 px-8 pt-24">
-      <FixedName firstName="Nicolas" lastName="Caillet"/>
+      <div ref={fixedNameRef}>
+        <FixedName firstName="Nicolas" lastName="Caillet" />
+      </div>
       <div className="max-w-8xl w-full mx-auto md:mt-20 lg:mt-40">
-        <div className="flex flex-col gap-16">
+        <div ref={projectsContainerRef} className="flex flex-col gap-16">
           {homepageProjects.map((project, index) => (
             <div key={index} className="flex">
-              <div className="flex-1">
+              <div className="project-info flex-1">
                 <p>
                   <span>Project : </span>
                   <span>{project.title}</span>
@@ -86,9 +125,9 @@ export default function Home() {
                 href={`/projects/${projectsData.projects.findIndex(
                   (p) => p.title === project.title
                 )}`}
-                className="group block w-2/3"
+                className="group block w-2/3 mb-24"
               >
-                <div className="w-full border border-black dark:border-white overflow-hidden mb-4">
+                <div style={{ opacity: 0 }} className="project-image w-full border border-black dark:border-white overflow-hidden mb-4">
                   <div className="relative w-full aspect-4/3">
                     {project.assets.images &&
                     project.assets.images.length > 0 ? (
@@ -107,7 +146,7 @@ export default function Home() {
                   </div>
                 </div>
 
-                <p className="max-w-4xl mx-auto text-black dark:text-white tracking-wide mb-24">
+                <p style={{ opacity: 0 }} className="project-title max-w-4xl mx-auto text-black dark:text-white tracking-wide">
                   {project.title}
                 </p>
               </TransitionLink>
@@ -124,7 +163,7 @@ export default function Home() {
             </p>
           </div>
         )}
-        <div className="text-center mt-16">
+        <div ref={ctaButtonRef} className="text-center mt-16">
           <TransitionLink
             href="/projects"
             className="inline-block border border-black dark:border-white px-6 py-3 text-black dark:text-white hover:bg-black hover:text-white dark:hover:bg-white dark:hover:text-black transition-colors duration-200"

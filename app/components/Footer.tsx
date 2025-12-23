@@ -5,7 +5,6 @@ import { gsap } from 'gsap';
 import { ScrollToPlugin } from 'gsap/ScrollToPlugin';
 import TransitionLink from './TransitionLink';
 
-// Enregistrer le plugin
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollToPlugin);
 }
@@ -14,7 +13,7 @@ const Footer = () => {
   const scrollToTop = () => {
     gsap.to(window, {
       duration: 1,
-      scrollTo: 0, // Simplifié - juste la position Y
+      scrollTo: 0,
       ease: "power2.inOut"
     });
   };

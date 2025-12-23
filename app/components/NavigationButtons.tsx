@@ -67,7 +67,7 @@ const NavigationButtons: React.FC = () => {
                   : "-translate-x-8 opacity-0"
               }`}
               style={{
-                transitionDelay: isMenuOpen ? `${index * 100}ms` : "0ms"
+                transitionDelay: isMenuOpen ? `${index * 100}ms` : "0ms",
               }}
               onClick={() => handleNavigation(item)}
             >
@@ -81,10 +81,15 @@ const NavigationButtons: React.FC = () => {
       </div>
 
       <div className="hidden md:flex gap-3 md:gap-16">
-        {items.map((item) => (
+        {items.map((item, index) => (
           <div key={item} className="flex">
             <button
-              className="nav-button py-3 md:py-4 text-xl md:text-base text-black border-none cursor-pointer transition-all duration-300 uppercase tracking-wider rounded-none font-semibold dark:text-white"
+              className="nav-button py-3 md:py-4 text-xl md:text-base text-black border-none cursor-pointer uppercase tracking-wider rounded-none font-semibold dark:text-white animate-nav-fade-down"
+              style={{
+                animationDelay: `${index * 75 + 200}ms`,
+                opacity: 0,
+                transform: `translateY(-12px)`,
+              }}
               onClick={() => handleNavigation(item)}
             >
               {item === "projects" && "Projets"}

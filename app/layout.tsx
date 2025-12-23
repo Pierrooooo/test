@@ -27,7 +27,15 @@ export default function RootLayout({
               {children}
             </main>
             <div className="fixed top-0 w-full z-30 flex flex-row justify-between items-center py-4 md:py-0 px-8 md:px-20 bg-white dark:bg-black">
-              <TransitionLink href="/" className="text-2xl font-doto">
+              <TransitionLink
+                href="/"
+                className="text-2xl font-doto animate-nav-fade-down"
+                style={{
+                  animationDelay: `${100}ms`,
+                  opacity: 0,
+                  transform: `translateY(-12px)`,
+                }}
+              >
                 Nicolas
               </TransitionLink>
               <NavigationButtons />

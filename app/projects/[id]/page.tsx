@@ -78,7 +78,6 @@ export default function ProjectDetailPage() {
     };
   }, [project]);
 
-  // Animation des images de la galerie au scroll
   React.useEffect(() => {
     if (!imagesRef.current || !project?.assets?.images) return;
 
@@ -101,7 +100,6 @@ export default function ProjectDetailPage() {
     };
   }, [project]);
 
-  // Animation de la description au scroll
   React.useEffect(() => {
     if (!project?.description) return;
     return animateTextElement(descriptionRef as React.RefObject<HTMLElement>);
@@ -142,7 +140,7 @@ export default function ProjectDetailPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black px-6 pt-24">
+    <div className="min-h-screen bg-white dark:bg-black px-6 pt-24 min-h-screen">
       <div className="max-w-6xl mx-auto md:mt-20 lg:mt-40">
         <div className="mb-16">
           {project.title?.trim() && (

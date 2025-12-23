@@ -4,7 +4,7 @@ import { useRef, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { TransitionLinkProps } from "../types";
 
-export default function TransitionLink({ href, children, className }: TransitionLinkProps) {
+export default function TransitionLink({ href, children, className, style }: TransitionLinkProps) {
   const overlayRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
 
@@ -28,7 +28,6 @@ export default function TransitionLink({ href, children, className }: Transition
       overlay.style.transition = "all 1.2s cubic-bezier(0.16, 1, 0.3, 1)";
       overlay.style.transform = "translateY(0) scale(1)";
       
-      // Navigate after animation
       setTimeout(() => {
         window.location.href = href;
       }, 1200);
@@ -37,7 +36,7 @@ export default function TransitionLink({ href, children, className }: Transition
 
   return (
     <>
-      <a href={href} onClick={handleClick} className={className}>
+      <a href={href} onClick={handleClick} className={className} style={style}>
         {children}
       </a>
       {mounted && createPortal(
